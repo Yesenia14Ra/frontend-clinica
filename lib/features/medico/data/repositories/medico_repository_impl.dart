@@ -12,18 +12,42 @@ class MedicoRepositoryImpl {
         'Accept': 'application/json',
       },
     ),
-  );
+  )..interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+        logPrint: (obj) => print('🌐 API Médico: $obj'),
+      ),
+    );
 
   Future<List<Medico>> getAll() async {
     try {
       final response = await _dio.get('/api/medicos');
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data as List<dynamic>;
-        return data.map((json) => Medico.fromJson(json)).toList();
+        // Manejar si response.data es una lista directamente o un objeto
+        if (response.data is List) {
+          final List<dynamic> data = response.data as List<dynamic>;
+          return data.map((json) => Medico.fromJson(json)).toList();
+        } else if (response.data is Map && response.data['data'] != null) {
+          // Si viene envuelto en un objeto con propiedad 'data'
+          final List<dynamic> data = response.data['data'] as List<dynamic>;
+          return data.map((json) => Medico.fromJson(json)).toList();
+        } else {
+          // Si no es lista ni tiene 'data', devolver lista vacía
+          print('⚠️ Respuesta inesperada del servidor: ${response.data}');
+          return [];
+        }
       }
       return [];
     } on DioException catch (e) {
       throw _handleError(e);
+    } catch (e) {
+      print('❌ Error al procesar datos: $e');
+      throw 'Error al procesar los datos: $e';
     }
   }
 

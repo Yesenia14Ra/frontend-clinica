@@ -31,7 +31,7 @@ class _HistoriaClinicaFormScreenState extends State<HistoriaClinicaFormScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     // Cargar listas de pacientes y médicos
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<PacienteProvider>().loadPacientes();
@@ -61,7 +61,8 @@ class _HistoriaClinicaFormScreenState extends State<HistoriaClinicaFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Editar Historia Clínica' : 'Nueva Historia Clínica'),
+        title: Text(
+            _isEditing ? 'Editar Historia Clínica' : 'Nueva Historia Clínica'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -83,7 +84,7 @@ class _HistoriaClinicaFormScreenState extends State<HistoriaClinicaFormScreen> {
                   }
 
                   return DropdownButtonFormField<String>(
-                    value: _selectedPacienteDni,
+                    initialValue: _selectedPacienteDni,
                     decoration: const InputDecoration(
                       labelText: 'Paciente',
                       prefixIcon: Icon(Icons.person),
@@ -127,7 +128,7 @@ class _HistoriaClinicaFormScreenState extends State<HistoriaClinicaFormScreen> {
                   }
 
                   return DropdownButtonFormField<String>(
-                    value: _selectedMedicoCmp,
+                    initialValue: _selectedMedicoCmp,
                     decoration: const InputDecoration(
                       labelText: 'Médico',
                       prefixIcon: Icon(Icons.medical_services),
@@ -310,7 +311,8 @@ class _HistoriaClinicaFormScreenState extends State<HistoriaClinicaFormScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(provider.errorMessage ?? 'Error al guardar historia clínica'),
+            content: Text(
+                provider.errorMessage ?? 'Error al guardar historia clínica'),
             backgroundColor: Colors.red,
           ),
         );
